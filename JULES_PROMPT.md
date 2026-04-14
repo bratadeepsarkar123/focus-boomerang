@@ -8,11 +8,7 @@ Read the following files in this exact order. Do not skip any file. Do not write
 
 2. **`spec/01_PRIMARY_SPEC.md`** — **This is the canonical implementation specification.** Every section in this file is an instruction. Implement every feature, schema, object shape, execution sequence, and module described. When in doubt, this file wins over everything else.
 
-3. **`spec/02_BUGS_AND_GUARDS.md`** — **Supplementary reference.** Read ONLY the following sections from this file:
-   - Section 15: "Implementation Guards (Read Before Coding)" — these are 10 numbered rules that prevent silent failures. Apply ALL of them.
-   - Section 16: "Test Scenarios (Verify All Before Shipping)" — use these as your validation checklist.
-   - Section 14: "Known Limitations (Do Not Fix in Phase 1)" — read and respect these. Do not attempt to solve them.
-   - **IGNORE all other sections** in this file — the feature descriptions, storage schema, and popup design are outdated (2-tier system). The PRIMARY spec (3-tier system) supersedes them entirely.
+3. **`spec/02_BUGS_AND_GUARDS.md`** — **Supplementary reference.** Contains the decision log, known limitations, 17 implementation guards that prevent silent failures, and 20 test scenarios. Read the entire file and apply every guard during implementation.
 
 ---
 

@@ -10,6 +10,8 @@ Read the following files in this exact order. Do not skip any file. Do not write
 
 3. **`spec/02_BUGS_AND_GUARDS.md`** — **Supplementary reference.** Contains the decision log, known limitations, 17 implementation guards that prevent silent failures, and 20 test scenarios. Read the entire file and apply every guard during implementation.
 
+4. **`spec/03_JULES_API_MASTER_REF.md`** — **Automation Toolkit.** Technical reference for your own API and CLI tools available in this repo.
+
 ---
 
 ## What to Build
@@ -69,4 +71,6 @@ focus-boomerang/
     └── icon128.png
 ```
 
-No npm. No build tools. No bundler. Static files only.
+No build tools. No bundler. The Chrome Extension files MUST be static, vanilla JS/HTML/CSS. 
+
+(Note: The `package.json` and `node_modules` in this repo are for your **API/CLI control tools** only — do not import them into the extension code).

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Boomerang</title>
+  <style>
+    body {
+      width: 360px;
+      margin: 0;
+      padding: 0;
+      background-color: #0f0f1a;
+      color: #ffffff;
+      font-family: sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #333;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #444;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4caf50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #333;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #aaa;
+      padding: 12px 0;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      border-bottom: 2px solid #4caf50;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Settings Textareas */
+    .setting-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      height: 80px;
+      background-color: #1a1a2e;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    .preview-container {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
+    .preview-list {
+      color: #aaa;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 24px;
+      gap: 12px;
+    }
+
+    #save-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #save-btn:hover {
+      background-color: #45a049;
+    }
+
+    #save-status {
+      font-size: 14px;
+      color: #4caf50;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    #save-status.show {
+      opacity: 1;
+    }
+
+    /* Stats & About */
+    .stats-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #222;
+      font-size: 13px;
+    }
+
+    .stats-item:last-child {
+      border-bottom: none;
+    }
+
+    .domain-name {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .about-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #aaa;
+    }
+
+    .version {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><img src="icons/icon16.png" class="logo" alt="logo" onerror="this.style.display='none'"> Focus Boomerang</h1>
+    <label class="switch">
+      <input type="checkbox" id="study-mode-toggle">
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-target="settings-tab">Settings</button>
+    <button class="tab-btn" data-target="stats-tab">Stats</button>
+    <button class="tab-btn" data-target="about-tab">About</button>
+  </div>
+
+  <div id="settings-tab" class="tab-content active">
+    <div class="setting-group">
+      <label>Study Domains</label>
+      <div class="hint">One domain per line, or comma-separated. Quiet notification when ready.</div>
+      <textarea id="study-domains" placeholder="e.g. github.com, docs.python.org"></textarea>
+      <div class="preview-container">Tracking: <span id="study-preview" class="preview-list"></span></div>
+    </div>
+
+    <div class="setting-group">
+      <label>Rabbit Hole Domains</label>
+      <div class="hint">Escalates to distraction after 5 dismissals or 5-min overstay.</div>
+      <textarea id="rabbit-domains" placeholder="e.g. news.ycombinator.com"></textarea>
+      <div class="preview-container">Tracking: <span id="rabbit-preview" class="preview-list"></span></div>
+    </div>
+
+    <div class="setting-group">
+      <label>Distraction Domains</label>
+      <div class="hint">Force-switch back to Gemini immediately.</div>
+      <textarea id="distraction-domains" placeholder="e.g. youtube.com, twitter.com"></textarea>
+      <div class="preview-container">Tracking: <span id="distraction-preview" class="preview-list"></span></div>
+    </div>
+
+    <div class="actions">
+      <span id="save-status">✓ Saved</span>
+      <button id="save-btn">Save</button>
+    </div>
+  </div>
+
+  <div id="stats-tab" class="tab-content">
+    <h3 style="margin-top:0;font-size:14px;">Current Session Time</h3>
+    <ul id="stats-list" class="stats-list">
+      <li style="color:#aaa;font-size:12px;padding-top:10px;">No session active or no time logged.</li>
+    </ul>
+  </div>
+
+  <div id="about-tab" class="tab-content">
+    <div class="about-text">
+      <p><strong>Focus Boomerang</strong> preserves your working memory by violently pulling your focus back to your study context the moment your AI query finishes generating.</p>
+      <p><strong>Privacy First:</strong> No URLs, domains, or session data ever leave your device. All state lives entirely in local storage.</p>
+    </div>
+    <div class="version">Version 1.0.0</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

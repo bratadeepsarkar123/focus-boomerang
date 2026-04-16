@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Focus Boomerang</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0f0f1a;
+      color: #ffffff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 500px;
+      max-width: 90vw;
+      background-color: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #4caf50;
+    }
+
+    p {
+      line-height: 1.5;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    /* Wizard Steps */
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    /* Form Elements */
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      height: 120px;
+      background-color: #0f0f1a;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 13px;
+      resize: vertical;
+      margin-bottom: 8px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    .preview-container {
+      font-size: 12px;
+      color: #888;
+      min-height: 16px;
+      margin-bottom: 24px;
+    }
+
+    .preview-list {
+      color: #aaa;
+    }
+
+    /* Navigation */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid #333;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+      transition: background-color 0.2s;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #aaa;
+      border: 1px solid #444;
+    }
+
+    .btn-secondary:hover {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    .btn:disabled {
+      background-color: #333;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    /* Progress Indicator */
+    .progress {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #444;
+      transition: background-color 0.3s;
+    }
+
+    .dot.active {
+      background-color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="progress" id="progress-indicator">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <!-- Step 1: Welcome -->
+    <div id="step-1" class="step active">
+      <h1>Welcome to Focus Boomerang</h1>
+      <p>Ever ask an AI a question, open a new tab while you wait, and then get completely lost in a distraction?</p>
+      <p><strong>Focus Boomerang</strong> solves this by watching Gemini generate your answer and instantly pulling your focus back when it's done.</p>
+      <p>Let's set up your focus tiers so the extension knows how to handle different websites.</p>
+
+      <div class="actions" style="justify-content: flex-end;">
+        <button class="btn btn-primary" id="next-1">Get Started</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Study Domains -->
+    <div id="step-2" class="step">
+      <h1>Classify: Study Domains</h1>
+      <p>These are places where you do actual work or research. When you're on a Study domain, the extension will just send a quiet notification when Gemini finishes.</p>
+
+      <label>Enter your Study Domains</label>
+      <div class="hint">One domain per line, or comma-separated.</div>
+      <textarea id="study-domains" placeholder="e.g. docs.python.org, github.com, canvas.instructure.com"></textarea>
+      <div class="preview-container">Tracking: <span id="study-preview" class="preview-list">None</span></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="back-2">Back</button>
+        <button class="btn btn-primary" id="next-2">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Rabbit Hole Domains -->
+    <div id="step-3" class="step">
+      <h1>Classify: Rabbit Hole Domains</h1>
+      <p>These are neutral sites that <em>can</em> be productive but often trap you (like news, blogs, or forums). Unclassified tabs default to this.</p>
+      <p>The extension sends a gentle notification here. But if you dismiss it 5 times or stay over 5 minutes, it escalates to a force-switch.</p>
+
+      <label>Enter your Rabbit Hole Domains</label>
+      <div class="hint">One domain per line, or comma-separated. Note: YouTube is generally a distraction, but if you watch lectures, you might put it here.</div>
+      <textarea id="rabbit-domains" placeholder="e.g. news.ycombinator.com, reddit.com, stackoverflow.com"></textarea>
+      <div class="preview-container">Tracking: <span id="rabbit-preview" class="preview-list">None</span></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="back-3">Back</button>
+        <button class="btn btn-primary" id="next-3">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Distraction Domains -->
+    <div id="step-4" class="step">
+      <h1>Classify: Distraction Domains</h1>
+      <p>These are the ultimate time-wasters. If you are on one of these domains when Gemini finishes, <strong>Focus Boomerang will violently pull you back</strong> to the AI tab immediately.</p>
+
+      <label>Enter your Distraction Domains</label>
+      <div class="hint">One domain per line, or comma-separated.</div>
+      <textarea id="distraction-domains" placeholder="e.g. twitter.com, instagram.com, tiktok.com"></textarea>
+      <div class="preview-container">Tracking: <span id="distraction-preview" class="preview-list">None</span></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="back-4">Back</button>
+        <button class="btn btn-primary" id="next-4">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Completion -->
+    <div id="step-5" class="step">
+      <h1>You're All Set!</h1>
+      <p>Your domains have been saved securely to your local browser storage.</p>
+      <p>Ready to reclaim your working memory?</p>
+
+      <div class="actions" style="justify-content: flex-end;">
+        <button class="btn btn-secondary" id="back-5" style="margin-right: auto;">Back</button>
+        <button class="btn btn-primary" id="finish-btn">Enable Study Mode & Let's Go!</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="onboarding.js"></script>
+</body>
+</html>

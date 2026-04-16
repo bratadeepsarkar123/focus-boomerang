@@ -7,6 +7,7 @@ const PERMANENT_RULES = [
   { url: 'notebooklm.google.com', classification: 'study',   isPermanent: true },
   { url: 'music.youtube.com',     classification: 'study',   isPermanent: true },
   { url: 'firewall.iitk.ac.in',   classification: 'ignored', isPermanent: true },
+  { url: 'gateway.iitk.ac.in',    classification: 'ignored', isPermanent: true },
   { url: 'webmail.iitk.ac.in',    classification: 'study',   isPermanent: true },
 ];
 
@@ -28,7 +29,7 @@ function goTo(step) {
   if (step === 3) populateTabTable();
 }
 
-// Wire all data-goto buttons (replaces inline onclick — CSP safe)
+// Wire all data-goto buttons (CSP safe)
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-goto]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -80,7 +81,10 @@ async function populateTabTable() {
                           existingEntry?.classification ||
                           null;
 
-    const tr    = document.createElement('tr');
+    // Skip ignored domains from the classification table
+    if (currentClass === 'ignored') return;
+
+    const tr     = document.createElement('tr');
     const tdInfo = document.createElement('td');
     tdInfo.innerHTML = `
       <div class="tab-title" title="${escHtml(tab.title || '')}">${escHtml(tab.title || '(Untitled)')}</div>

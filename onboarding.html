@@ -23,7 +23,6 @@
       width: 100%;
     }
 
-    /* Step indicators */
     .steps {
       display: flex;
       align-items: center;
@@ -40,25 +39,15 @@
       flex-shrink: 0;
       transition: all 0.3s;
     }
-    .step-dot.active {
-      background: #6c63ff;
-      border-color: #6c63ff;
-      color: #fff;
-    }
-    .step-dot.done {
-      background: #2ecc71;
-      border-color: #2ecc71;
-      color: #fff;
-    }
+    .step-dot.active { background: #6c63ff; border-color: #6c63ff; color: #fff; }
+    .step-dot.done   { background: #2ecc71; border-color: #2ecc71; color: #fff; }
     .step-line {
-      flex: 1;
-      height: 2px;
+      flex: 1; height: 2px;
       background: #2a2a2a;
       transition: background 0.3s;
     }
     .step-line.done { background: #2ecc71; }
 
-    /* Cards */
     .card {
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
@@ -67,106 +56,42 @@
       display: none;
     }
     .card.active { display: block; }
-
     .card-icon { font-size: 48px; margin-bottom: 16px; }
 
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #fff;
-    }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: #fff; }
+    p  { font-size: 15px; line-height: 1.7; color: #bbb; margin-bottom: 16px; }
 
-    p {
-      font-size: 15px;
-      line-height: 1.7;
-      color: #bbb;
-      margin-bottom: 16px;
-    }
-
-    .tier-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin: 20px 0;
-    }
-    .tier-card {
-      background: #222;
-      border-radius: 10px;
-      padding: 14px 16px;
-      border-left: 3px solid transparent;
-    }
-    .tier-card.study   { border-color: #2ecc71; }
-    .tier-card.rabbit  { border-color: #f39c12; }
+    .tier-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 20px 0; }
+    .tier-card { background: #222; border-radius: 10px; padding: 14px 16px; border-left: 3px solid transparent; }
+    .tier-card.study       { border-color: #2ecc71; }
+    .tier-card.rabbit      { border-color: #f39c12; }
     .tier-card.distraction { border-color: #e74c3c; }
     .tier-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .tier-card.study h3   { color: #2ecc71; }
-    .tier-card.rabbit h3  { color: #f39c12; }
+    .tier-card.study h3       { color: #2ecc71; }
+    .tier-card.rabbit h3      { color: #f39c12; }
     .tier-card.distraction h3 { color: #e74c3c; }
-    .tier-card p  { font-size: 13px; color: #aaa; margin: 0; }
+    .tier-card p { font-size: 13px; color: #aaa; margin: 0; }
 
-    /* Tab classification table */
-    .tab-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
-      font-size: 13px;
-    }
-    .tab-table th {
-      text-align: left;
-      padding: 8px 10px;
-      color: #888;
-      font-weight: 500;
-      border-bottom: 1px solid #2a2a2a;
-    }
-    .tab-table td {
-      padding: 10px 10px;
-      border-bottom: 1px solid #1f1f1f;
-      vertical-align: middle;
-    }
-    .tab-title {
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: #ddd;
-    }
+    .tab-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+    .tab-table th { text-align: left; padding: 8px 10px; color: #888; font-weight: 500; border-bottom: 1px solid #2a2a2a; }
+    .tab-table td { padding: 10px; border-bottom: 1px solid #1f1f1f; vertical-align: middle; }
+    .tab-title  { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #ddd; }
     .tab-domain { color: #888; font-size: 12px; }
 
-    .classify-btns {
-      display: flex;
-      gap: 6px;
-    }
+    .classify-btns { display: flex; gap: 6px; }
     .classify-btns button {
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background: #222;
-      color: #aaa;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.15s;
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #333;
+      background: #222; color: #aaa; font-size: 11px; cursor: pointer; transition: all 0.15s;
     }
     .classify-btns button:hover { opacity: 0.8; }
     .classify-btns button.active-study  { background: #1a3d2a; border-color: #2ecc71; color: #2ecc71; }
     .classify-btns button.active-rabbit { background: #3d2e0e; border-color: #f39c12; color: #f39c12; }
     .classify-btns button.active-dist   { background: #3d1010; border-color: #e74c3c; color: #e74c3c; }
 
-    /* Navigation */
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 32px;
-    }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
     .btn {
-      padding: 12px 28px;
-      border-radius: 10px;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
+      padding: 12px 28px; border-radius: 10px; border: none;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
     }
     .btn:hover { opacity: 0.85; }
     .btn-primary { background: #6c63ff; color: #fff; }
@@ -174,26 +99,13 @@
     .btn-success { background: #2ecc71; color: #111; }
     .btn-ghost:hover { color: #ccc; border-color: #555; opacity: 1; }
 
-    #activate-btn {
-      width: 100%;
-      padding: 16px;
-      font-size: 17px;
-      margin-top: 24px;
-      border-radius: 12px;
-    }
-
-    .empty-tabs {
-      color: #666;
-      font-size: 13px;
-      text-align: center;
-      padding: 20px 0;
-    }
+    #activate-btn { width: 100%; padding: 16px; font-size: 17px; margin-top: 24px; border-radius: 12px; }
+    .empty-tabs { color: #666; font-size: 13px; text-align: center; padding: 20px 0; }
   </style>
 </head>
 <body>
 <div class="wizard">
 
-  <!-- Step indicators -->
   <div class="steps">
     <div class="step-dot active" id="dot-1">1</div>
     <div class="step-line" id="line-1"></div>
@@ -204,32 +116,26 @@
     <div class="step-dot" id="dot-4">4</div>
   </div>
 
-  <!-- Step 1: The Problem -->
+  <!-- Step 1 -->
   <div class="card active" id="step-1">
     <div class="card-icon">🧠</div>
     <h1>Your working memory is being hijacked</h1>
-    <p>
-      When you ask Gemini a hard question, it takes 15–30 seconds to respond.
+    <p>When you ask Gemini a hard question, it takes 15–30 seconds to respond.
       In that gap, your brain seeks stimulation — you switch to YouTube or Reddit
-      <em>"just for a second."</em>
-    </p>
-    <p>
-      By the time Gemini finishes, you're 3 videos deep. The mental context of your
+      <em>"just for a second."</em></p>
+    <p>By the time Gemini finishes, you're 3 videos deep. The mental context of your
       original question? Gone. You've lost 15 minutes and have to rebuild your
-      train of thought from scratch.
-    </p>
-    <p>
-      <strong style="color:#fff">Focus Boomerang closes that gap.</strong> The moment
-      Gemini finishes generating, it snaps your focus back — but only if you wandered
-      to a distraction. If you're reading notes, it leaves you alone.
-    </p>
+      train of thought from scratch.</p>
+    <p><strong style="color:#fff">Focus Boomerang closes that gap.</strong>
+      The moment Gemini finishes generating, it snaps your focus back — but only if
+      you wandered to a distraction. If you're reading notes, it leaves you alone.</p>
     <div class="nav">
       <span></span>
-      <button class="btn btn-primary" onclick="goTo(2)">Got it →</button>
+      <button class="btn btn-primary" data-goto="2">Got it →</button>
     </div>
   </div>
 
-  <!-- Step 2: The Three Tiers -->
+  <!-- Step 2 -->
   <div class="card" id="step-2">
     <div class="card-icon">🗂</div>
     <h1>Three types of tabs</h1>
@@ -237,60 +143,49 @@
     <div class="tier-grid">
       <div class="tier-card study">
         <h3>📚 Study</h3>
-        <p>Productive tabs. You'll get a gentle notification when Gemini finishes, but no force-switch. Examples: hello.iitk.ac.in, NotebookLM, lecture slides.</p>
+        <p>Productive tabs. Gentle notification when Gemini finishes — no force-switch. Examples: hello.iitk.ac.in, NotebookLM, lecture slides.</p>
       </div>
       <div class="tier-card rabbit">
         <h3>🐇 Rabbit Hole</h3>
-        <p>Interesting but risky tabs. You'll get a gentle ping. If you keep going back, the extension escalates to a stronger nudge. Examples: Wikipedia, Hacker News.</p>
+        <p>Interesting but risky. Gentle ping — escalates if you keep wandering. Examples: Wikipedia, Hacker News.</p>
       </div>
       <div class="tier-card distraction">
         <h3>🚫 Distraction</h3>
-        <p>Known time-sinks. When Gemini finishes and you're here, you're forcefully switched back — with a full-screen overlay. Examples: YouTube (memes), Reddit, Instagram.</p>
+        <p>Known time-sinks. Forceful switch + full-screen overlay. Examples: YouTube (memes), Reddit, Instagram.</p>
       </div>
     </div>
     <div class="nav">
-      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
-      <button class="btn btn-primary" onclick="goTo(3)">Next →</button>
+      <button class="btn btn-ghost" data-goto="1">← Back</button>
+      <button class="btn btn-primary" data-goto="3">Next →</button>
     </div>
   </div>
 
-  <!-- Step 3: Classify your open tabs -->
+  <!-- Step 3 -->
   <div class="card" id="step-3">
     <div class="card-icon">🏷</div>
     <h1>Classify your open tabs</h1>
     <p>Tag each currently open tab. You can always change these later from the popup.</p>
     <table class="tab-table">
-      <thead>
-        <tr>
-          <th>Tab</th>
-          <th>Classify</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Tab</th><th>Classify</th></tr></thead>
       <tbody id="tab-rows">
         <tr><td colspan="2" class="empty-tabs">Loading tabs…</td></tr>
       </tbody>
     </table>
     <div class="nav">
-      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
-      <button class="btn btn-primary" onclick="goTo(4)">Next →</button>
+      <button class="btn btn-ghost" data-goto="2">← Back</button>
+      <button class="btn btn-primary" data-goto="4">Next →</button>
     </div>
   </div>
 
-  <!-- Step 4: Activate -->
+  <!-- Step 4 -->
   <div class="card" id="step-4">
     <div class="card-icon">🚀</div>
     <h1>You're all set</h1>
-    <p>
-      Focus Boomerang is configured and ready. Turn on Study Mode to start
-      protecting your focus sessions.
-    </p>
-    <p style="font-size:13px; color:#666;">
-      You can fine-tune domain lists and view session stats anytime from the
-      extension popup (click the 🪃 icon in your toolbar).
-    </p>
+    <p>Focus Boomerang is configured and ready. Turn on Study Mode to start protecting your focus sessions.</p>
+    <p style="font-size:13px; color:#666;">Fine-tune domain lists and view session stats from the extension popup (🪃 icon in your toolbar).</p>
     <button class="btn btn-success" id="activate-btn">🪃 Turn on Study Mode &amp; Start</button>
     <div class="nav" style="margin-top: 16px;">
-      <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-ghost" data-goto="3">← Back</button>
       <span style="font-size:12px; color:#555;">You can also activate from the popup later</span>
     </div>
   </div>

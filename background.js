@@ -270,6 +270,7 @@ async function handleHeartbeat() {
 // --- Boomerang Execution Sequence ---
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('[FB bg] message received:', message.action, 'from tab', sender.tab?.id);
   if (message.action === 'gemini_started') {
     handleGeminiStarted(sender);
   } else if (message.action === 'gemini_complete') {
@@ -287,6 +288,7 @@ async function handleGeminiStarted(sender) {
     startedAt: Date.now(),
     isSidePanel: sender.tab === undefined
   });
+  console.log('[FB bg] gemini_started — pushed to pendingQueries, isGenerating=true');
   await chrome.storage.local.set({
     pendingQueries,
     isGenerating: true,
@@ -310,23 +312,28 @@ async function handleObserverTimeout() {
 }
 
 async function handleGeminiComplete() {
+  console.log('[FB bg] handleGeminiComplete() called');
   const data = await chrome.storage.local.get([
     'studyModeEnabled', 'isGenerating', 'pendingQueries', 'isChromeFocused',
     'lastStudyTabId', 'lastStudyWindowId', 'tabClassifications', 'lastNotifiedAt',
     'sessions', 'activeSessionId', 'rabbitHoleTabId'
   ]);
 
+  console.log('[FB bg] studyModeEnabled:', data.studyModeEnabled, '— EXIT if false');
   if (!data.studyModeEnabled) return;
+  console.log('[FB bg] isGenerating:', data.isGenerating, '— EXIT if false');
   if (!data.isGenerating) return;
 
   await chrome.storage.local.set({ isGenerating: false });
   chrome.alarms.clear('observerTimeout');
 
   let pendingQueries = data.pendingQueries || [];
+  console.log('[FB bg] pendingQueries count:', pendingQueries.length, '— EXIT if 0');
   if (pendingQueries.length === 0) return;
   pendingQueries.sort((a, b) => a.startedAt - b.startedAt);
   const targetQuery = pendingQueries.shift();
 
+  console.log('[FB bg] isChromeFocused:', data.isChromeFocused);
   if (!data.isChromeFocused) {
     chrome.notifications.create({
       type: 'basic', iconUrl: 'icons/icon48.png',
@@ -343,6 +350,7 @@ async function handleGeminiComplete() {
       return;
     }
     const currentTab = tabs[0];
+    console.log('[FB bg] current tab:', currentTab.url);
 
     if (currentTab.discarded) {
       chrome.notifications.create({
@@ -364,6 +372,7 @@ async function handleGeminiComplete() {
     if ((classification === 'rabbit_hole' || classification === 'unclassified') && data.rabbitHoleTabId === currentTab.id) {
       classification = 'distraction';
     }
+    console.log('[FB bg] classification result:', classification);
 
     const now = Date.now();
     const lastNotifiedAt = data.lastNotifiedAt || 0;
@@ -406,12 +415,14 @@ async function handleGeminiComplete() {
     }
 
     // Distraction path
+    console.log('[FB bg] distraction path reached');
     if (activeSession) {
       activeSession.boomerangsTotal = (activeSession.boomerangsTotal || 0) + 1;
       activeSession.boomerangsCaught = (activeSession.boomerangsCaught || 0) + 1;
     }
 
     let target = null;
+    console.log('[FB bg] lastStudyTabId:', data.lastStudyTabId);
     if (targetQuery.isSidePanel === false && targetQuery.originTabId) {
       target = { tabId: targetQuery.originTabId, windowId: targetQuery.originWindowId };
     } else if (data.lastStudyTabId) {
@@ -433,7 +444,10 @@ async function handleGeminiComplete() {
       return;
     }
 
+    console.log('[FB bg] target resolved: tabId=', target.tabId, 'windowId=', target.windowId);
+
     try {
+      console.log('[FB bg] scripting.executeScript called on tabId:', currentTab.id);
       await chrome.scripting.executeScript({
         target: { tabId: currentTab.id },
         func: () => {
@@ -459,9 +473,11 @@ async function handleGeminiComplete() {
         }
       }).catch(() => {});
 
+      console.log('[FB bg] tab switch attempted: tabId=', target.tabId);
       await chrome.tabs.update(target.tabId, { active: true });
       if (target.windowId) await chrome.windows.update(target.windowId, { focused: true });
     } catch (e) {
+      console.log('[FB bg] ERROR in distraction path:', e.message);
       // target tab died
     }
 

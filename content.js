@@ -1,6 +1,7 @@
 // --- Injection Guard ---
 if (!window.__focusBoomerangInjected) {
   window.__focusBoomerangInjected = true;
+  console.log('[FB content.js] injected on:', window.location.href);
 
   // --- State Variables ---
   let observerAttached = false;
@@ -108,15 +109,21 @@ if (!window.__focusBoomerangInjected) {
 
   function startLevel1Observer() {
     if (observerAttached) return;
+    console.log('[FB L1] observer started, watching document.body');
 
     level1Observer = new MutationObserver((mutations) => {
+      console.log('[FB L1] mutation fired, addedNodes count:', mutations.reduce((s, m) => s + m.addedNodes.length, 0));
       // Find the chat container
       let container = document.querySelector('[role="main"]');
-      if (!container) {
+      if (container) {
+        console.log('[FB L1] checking for [role=main]... found');
+      } else {
+        console.log('[FB L1] checking for [role=main]... not found');
         // Fallback: look for aria-label containing "chat" or "conversation"
         const potentialContainers = document.querySelectorAll('[aria-label]');
         for (const el of potentialContainers) {
           const label = el.getAttribute('aria-label').toLowerCase();
+          console.log('[FB L1] checking aria-label containers... checking:', label);
           if (label.includes('chat') || label.includes('conversation')) {
             container = el;
             break;
@@ -125,6 +132,7 @@ if (!window.__focusBoomerangInjected) {
       }
 
       if (container) {
+        console.log('[FB L1] container found:', container.tagName, container.outerHTML.slice(0, 100), '— starting L2');
         level1Observer.disconnect();
         level1Observer = null;
         observerAttached = true;
@@ -137,6 +145,7 @@ if (!window.__focusBoomerangInjected) {
   }
 
   function startLevel2Observer(container) {
+    console.log('[FB L2] observer started on container');
     level2Observer = new MutationObserver(handleLevel2Mutations);
     level2Observer.observe(container, { childList: true, subtree: true });
   }
@@ -146,6 +155,7 @@ if (!window.__focusBoomerangInjected) {
   function handleLevel2Mutations(mutations) {
     // SPA Re-trigger Rule: check if container itself was removed
     if (!document.body.contains(currentChatContainer)) {
+      console.log('[FB L2] SPA re-trigger — container removed from DOM, restarting L1');
       if (level2Observer) level2Observer.disconnect();
       level2Observer = null;
       observerAttached = false;
@@ -156,31 +166,42 @@ if (!window.__focusBoomerangInjected) {
     }
 
     for (const mutation of mutations) {
+      console.log('[FB L2] mutation fired, addedNodes:', mutation.addedNodes.length, 'removedNodes:', mutation.removedNodes.length);
+      console.log('[FB L2] isCurrentlyGenerating:', isCurrentlyGenerating);
       // Look for Signal A (Start) and Signal B (Complete)
       for (const node of mutation.addedNodes) {
         if (node.nodeType === Node.ELEMENT_NODE) {
+          console.log('[FB L2] checking addedNode:', node.tagName, node.outerHTML.slice(0, 80));
 
           // Signal A: "Stop" button appears
+          console.log('[FB L2] Signal A check — looking for stop button in node...');
           if (!isCurrentlyGenerating) {
              const stopButton = findAriaElement(node, 'role', 'button', 'aria-label', 'stop');
              if (stopButton) {
+               console.log('[FB L2] Signal A FOUND — sending gemini_started');
                isCurrentlyGenerating = true;
                chrome.runtime.sendMessage({ action: 'gemini_started' }).catch(() => {});
              }
           }
 
           // Signal B: "Copy" or "Thumb up" / "Good response" appears
+          console.log('[FB L2] Signal B check — looking for copy/thumb up/good response...');
           if (isCurrentlyGenerating) {
              const copyOrThumb = findAriaElementMatch(node, 'aria-label', ['copy', 'thumb up', 'good response']);
              if (copyOrThumb) {
+                console.log('[FB L2] Signal B candidate found: aria-label=', copyOrThumb.getAttribute('aria-label'));
                 // Verify it's in the latest response container
                 const responses = currentChatContainer.querySelectorAll('[data-message-author-role="model"]');
                 if (responses.length > 0) {
                    const latestResponse = responses[responses.length - 1];
                    if (latestResponse.contains(copyOrThumb)) {
+                       console.log('[FB L2] Signal B — checking if inside latest model response... yes');
+                       console.log('[FB L2] Signal B FIRED — sending gemini_complete');
                        isCurrentlyGenerating = false;
                        if (signalCDebounceTimer) clearTimeout(signalCDebounceTimer);
                        chrome.runtime.sendMessage({ action: 'gemini_complete' }).catch(() => {});
+                   } else {
+                       console.log('[FB L2] Signal B — checking if inside latest model response... no');
                    }
                 }
              }
@@ -201,6 +222,7 @@ if (!window.__focusBoomerangInjected) {
         if (node.nodeType === Node.ELEMENT_NODE) {
           if (isCurrentlyGenerating) {
              const stopButton = findAriaElement(node, 'role', 'button', 'aria-label', 'stop');
+             console.log('[FB L2] removedNode check — stop button removed?', stopButton ? 'yes' : 'no');
              if (stopButton) {
                 // Debounce 500ms to see if Signal B arrives
                 if (signalCDebounceTimer) clearTimeout(signalCDebounceTimer);
